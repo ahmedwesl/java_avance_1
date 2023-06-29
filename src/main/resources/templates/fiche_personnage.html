@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>Fiche d'un personnage</title>
 </head>
 <body>
-$END$
-</body>
-</html>
+<h1>Fiche d'un personnage</h1>
+<div>
+  <strong>Nom:</strong> <span th:text="${personnage.nom}"></span>
+</div>
+<div>
+  <strong>Points de vie:</strong> <span th:text="${personnage.pointsDeVie}"></span>
+</div>
+<div>
+  <

@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>Liste des personnages</title>
 </head>
 <body>
-$END$
+<h1>Liste des personnages</h1>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Nom</th>
+    <th>Type</th>
+    <th>Points de vie</th>
+    <th>Actions</th>
+  </tr>
+  <tr th:each="personnage : ${personnages}">
+    <td th:text="${personnage.id}"></td>
+    <td th:text="${personnage.nom}"></td>
+    <td th:text="${personnage.type}"></td>
+    <td th:text="${personnage.pointsDeVie}"></td>
+    <td>
+      <a th:href="@{/personnages/__${personnage.id}__/modifier}">Modifier</a>
+      <a th:href="@{/personnages/__${personnage.id}__/supprimer}">Supprimer</a>
+    </td>
+  </tr>
+</table>
+<a href="/personnages/nouveau">Créer un nouveau personnage</a>
 </body>
 </html>
