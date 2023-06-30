@@ -51,9 +51,6 @@ package com.donjon.java_avance_1;
         this.pointsDeVie = pointsDeVie;
     }
 
-
-
-
     }
 
 

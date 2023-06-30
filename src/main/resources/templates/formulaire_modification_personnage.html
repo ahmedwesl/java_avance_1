@@ -6,10 +6,16 @@
 </head>
 <body>
 <h1>Modification d'un personnage</h1>
+
+
+//Le `@{/...}` est une syntaxe Thymeleaf pour générer des URL relatives. Dans ce cas, l'URL est générée en utilisant l'ID du personnage dans la partie dynamique `__${personnage.id}__`.
 <form th:action="@{/personnages/__${personnage.id}__/modifier}" method="post" th:object="${personnage}">
+  //Cet attribut lie l'objet `personnage` au formulaire. Cela signifie que les valeurs des champs du formulaire seront liées aux propriétés de l'objet `personnage`.
   <div>
     <label>Nom:</label>
+    // Cet attribut lie le champ de saisie au champ `nom` de l'objet `personnage`. L'astérisque (*) est utilisé pour indiquer que l'objet `personnage` est le contexte actuel.
     <input type="text" th:field="*{nom}" required autofocus />
+    //Cette expression conditionnelle vérifie si le champ `nom` a des erreurs de validation.
     <span th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
   </div>
   <div>
