@@ -25,10 +25,18 @@ public class PersonnageController {
 //        return "liste_personnages";
 //    }
 
+
+
+
+
+    // Instance de RestTemplate
+    private RestTemplate restTemplate = new RestTemplate();
+    private String apiUrl = "http://localhost:8081/personnages";
+
+    // Afficher la liste des personnages
     @GetMapping("/personnages")
     public String afficherListePersonnages(Model model) {
-        RestTemplate restTemplate = new RestTemplate();
-        String apiUrl = "http://localhost:8081/personnages";
+        // Appel à l'API pour récupérer la liste des personnages
         ResponseEntity<Personnage[]> response = restTemplate.getForEntity(apiUrl, Personnage[].class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -53,9 +61,6 @@ public class PersonnageController {
         if (result.hasErrors()) {
             return "formulaire_creation_personnage";
         }
-
-        RestTemplate restTemplate = new RestTemplate();
-        String apiUrl = "http://localhost:8081/personnages";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -132,24 +137,16 @@ public class PersonnageController {
     public String modifierPersonnage(@PathVariable("id") long id,
                                      @ModelAttribute("personnage") Personnage personnage,
                                      BindingResult result) {
-
         if (result.hasErrors()) {
             return "formulaire_modification_personnage";
         }
 
-        RestTemplate restTemplate = new RestTemplate();
-        String apiUrl = "http://localhost:8081/personnages/" + id;
-
+        // Appel à l'API pour modifier le personnage
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<Personnage> request = new HttpEntity<>(personnage, headers);
-        restTemplate.exchange(apiUrl, HttpMethod.PUT, request, Personnage.class);
-
-        Personnage personnageExistant = trouverPersonnageParId(id);
-        personnageExistant.setNom(personnage.getNom());
-        personnageExistant.setType(personnage.getType());
-        personnageExistant.setPointsDeVie(personnage.getPointsDeVie());
+        restTemplate.exchange(apiUrl + "/" + id, HttpMethod.PUT, request, Personnage.class);
 
         return "redirect:/personnages";
     }
@@ -168,18 +165,15 @@ public class PersonnageController {
 
     //---------------------------------------------------------------------------------
 
+    // Supprimer un personnage
     @GetMapping("/personnages/{id}/supprimer")
     public String supprimerPersonnage(@PathVariable("id") long id) {
-        RestTemplate restTemplate = new RestTemplate();
-        String apiUrl = "http://localhost:8081/personnages/" + id;
-
-        restTemplate.delete(apiUrl);
-
-        Personnage personnage = trouverPersonnageParId(id);
-        personnages.remove(personnage);
+        // Appel à l'API pour supprimer le personnage
+        restTemplate.delete(apiUrl + "/" + id);
 
         return "redirect:/personnages";
     }
+
 
 
 //    @GetMapping("/personnages/{id}/supprimer")
@@ -193,13 +187,15 @@ public class PersonnageController {
 
 
     private Personnage trouverPersonnageParId(long id) {
-        for (Personnage personnage : personnages) {
-            if (personnage.getId() == id) {
-                return personnage;
-            }
+        RestTemplate restTemplate = new RestTemplate();
+        String apiUrl = "http://localhost:8081/personnages/" + id;
+
+        ResponseEntity<Personnage> response = restTemplate.getForEntity(apiUrl, Personnage.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return response.getBody();
         }
+
         return null;
     }
-
 
 }
